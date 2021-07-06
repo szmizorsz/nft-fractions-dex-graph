@@ -1,6 +1,18 @@
-type ExampleEntity @entity {
-  id: ID!
-  count: BigInt!
-  account: Bytes! # address
-  operator: Bytes! # address
+type Account @entity {
+    id: ID! # address
+    balances: [Balance!]! @derivedFrom(field: "account")
+}
+
+type Token @entity {
+    id: ID!
+    identifier: BigInt!
+    totalSupply: BigInt!
+    balances: [Balance!]! @derivedFrom(field: "token")
+}
+
+type Balance @entity {
+    id: ID!
+    token: Token!
+    account: Account!
+    value: BigInt!
 }

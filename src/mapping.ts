@@ -1,78 +1,70 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 import {
-  Contract,
-  ApprovalForAll,
-  OwnershipTransferred,
-  Paused,
-  TransferBatch,
-  TransferSingle,
-  URI,
-  Unpaused
+  TransferSingle
 } from "../generated/Contract/Contract"
-import { ExampleEntity } from "../generated/schema"
+import {
+  Account,
+  Token,
+  Balance
+} from "../generated/schema"
 
-export function handleApprovalForAll(event: ApprovalForAll): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
+let BIGINT_ZERO = BigInt.fromI32(0)
+const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
 
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (entity == null) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
+function fetchAccount(address: Bytes): Account {
+  let id = address.toHex()
+  let account = Account.load(id)
+  if (account == null) {
+    account = new Account(id)
   }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
-  entity.account = event.params.account
-  entity.operator = event.params.operator
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.balanceOf(...)
-  // - contract.balanceOfBatch(...)
-  // - contract.isApprovedForAll(...)
-  // - contract.owner(...)
-  // - contract.paused(...)
-  // - contract.supportsInterface(...)
-  // - contract.uri(...)
-  // - contract.getTokenData(...)
-  // - contract.getTotalFractionsAmount(...)
-  // - contract.getErc721ContractAddress(...)
-  // - contract.getTokenIdsByShareOwner(...)
-  // - contract.getOwnersBYtokenId(...)
-  // - contract.getTokenIds(...)
+  account.save()
+  return account as Account
 }
 
-export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
+function fetchToken(id: BigInt): Token {
+  let tokenid = id.toHex()
+  let token = Token.load(tokenid)
+  if (token == null) {
+    token = new Token(tokenid)
+    token.identifier = id
+    token.totalSupply = BIGINT_ZERO
+  }
+  return token as Token
+}
 
-export function handlePaused(event: Paused): void {}
+function fetchBalance(token: Token, account: Account): Balance {
+  let balanceid = token.id.concat('-').concat(account.id)
+  let balance = Balance.load(balanceid)
+  if (balance == null) {
+    balance = new Balance(balanceid)
+    balance.token = token.id
+    balance.account = account.id
+    balance.value = BIGINT_ZERO
+  }
+  return balance as Balance
+}
 
-export function handleTransferBatch(event: TransferBatch): void {}
+export function handleTransferSingle(event: TransferSingle): void {
+  let from = fetchAccount(event.params.from)
+  let to = fetchAccount(event.params.to)
+  let token = fetchToken(event.params.id)
 
-export function handleTransferSingle(event: TransferSingle): void {}
+  if (from.id == ADDRESS_ZERO) {
+    token.totalSupply = event.params.value
+  } else {
+    let balance = fetchBalance(token, from)
+    balance.value = balance.value.minus(event.params.value)
+    balance.save()
+  }
 
-export function handleURI(event: URI): void {}
+  if (to.id == ADDRESS_ZERO) {
+    token.totalSupply = token.totalSupply.minus(event.params.value)
+  } else {
+    let balance = fetchBalance(token, to)
+    balance.value = balance.value.plus(event.params.value)
+    balance.save()
+  }
 
-export function handleUnpaused(event: Unpaused): void {}
+  token.save()
+}
+
