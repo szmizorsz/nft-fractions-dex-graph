@@ -57,9 +57,7 @@ export function handleTransferSingle(event: TransferSingle): void {
     balance.save()
   }
 
-  if (to.id == ADDRESS_ZERO) {
-    token.totalSupply = token.totalSupply.minus(event.params.value)
-  } else {
+  if (to.id != ADDRESS_ZERO) {
     let balance = fetchBalance(token, to)
     balance.value = balance.value.plus(event.params.value)
     balance.save()
