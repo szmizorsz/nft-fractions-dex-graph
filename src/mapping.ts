@@ -52,6 +52,9 @@ function fetchBalance(token: Token, account: Account): Balance {
 }
 
 export function handleTransferSingle(event: TransferSingle): void {
+  log.info('TransferSingle event handler: {}', [
+    event.params.id.toString(),
+  ])
   let from = fetchAccount(event.params.from)
   let to = fetchAccount(event.params.to)
   let token = fetchToken(event.params.id)
@@ -70,6 +73,9 @@ export function handleTransferSingle(event: TransferSingle): void {
 }
 
 export function handleDepositNft(event: DepositNft): void {
+  log.info('DepositNFt event handler: {}', [
+    event.params.erc1155TokenId.toString(),
+  ])
   let token = fetchToken(event.params.erc1155TokenId)
   token.totalSupply = event.params.totalFractionsAmount
   token.erc721ContractAddress = event.params.erc721ContractAddress
