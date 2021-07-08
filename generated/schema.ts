@@ -91,31 +91,55 @@ export class Token extends Entity {
     this.set("identifier", Value.fromBigInt(value));
   }
 
-  get totalSupply(): BigInt {
+  get totalSupply(): BigInt | null {
     let value = this.get("totalSupply");
-    return value.toBigInt();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set totalSupply(value: BigInt) {
-    this.set("totalSupply", Value.fromBigInt(value));
+  set totalSupply(value: BigInt | null) {
+    if (value === null) {
+      this.unset("totalSupply");
+    } else {
+      this.set("totalSupply", Value.fromBigInt(value as BigInt));
+    }
   }
 
-  get erc721ContractAddress(): Bytes {
+  get erc721ContractAddress(): Bytes | null {
     let value = this.get("erc721ContractAddress");
-    return value.toBytes();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
   }
 
-  set erc721ContractAddress(value: Bytes) {
-    this.set("erc721ContractAddress", Value.fromBytes(value));
+  set erc721ContractAddress(value: Bytes | null) {
+    if (value === null) {
+      this.unset("erc721ContractAddress");
+    } else {
+      this.set("erc721ContractAddress", Value.fromBytes(value as Bytes));
+    }
   }
 
-  get erc721TokenId(): BigInt {
+  get erc721TokenId(): BigInt | null {
     let value = this.get("erc721TokenId");
-    return value.toBigInt();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set erc721TokenId(value: BigInt) {
-    this.set("erc721TokenId", Value.fromBigInt(value));
+  set erc721TokenId(value: BigInt | null) {
+    if (value === null) {
+      this.unset("erc721TokenId");
+    } else {
+      this.set("erc721TokenId", Value.fromBigInt(value as BigInt));
+    }
   }
 
   get tokenURI(): string | null {

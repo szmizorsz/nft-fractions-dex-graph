@@ -28,9 +28,9 @@ function fetchToken(id: BigInt): Token {
   if (token == null) {
     token = new Token(tokenid)
     token.identifier = id
-    token.totalSupply = BIGINT_ZERO
-    token.erc721ContractAddress = ByteArray.fromHexString(ADDRESS_ZERO)
-    token.erc721TokenId = BIGINT_ZERO
+    //token.totalSupply = BIGINT_ZERO
+    //token.erc721ContractAddress = ByteArray.fromHexString(ADDRESS_ZERO)
+    //token.erc721TokenId = BIGINT_ZERO
     token.save()
   }
   return token as Token
