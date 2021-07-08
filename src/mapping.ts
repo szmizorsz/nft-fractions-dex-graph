@@ -1,4 +1,4 @@
-import { BigInt, Bytes, ByteArray } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes, log } from "@graphprotocol/graph-ts"
 import {
   TransferSingle,
   DepositNft
@@ -31,6 +31,9 @@ function fetchToken(id: BigInt): Token {
     //token.totalSupply = BIGINT_ZERO
     //token.erc721ContractAddress = ByteArray.fromHexString(ADDRESS_ZERO)
     //token.erc721TokenId = BIGINT_ZERO
+    log.info('Token created: {}', [
+      tokenid.toString(),
+    ])
     token.save()
   }
   return token as Token
