@@ -100,6 +100,41 @@ export class Token extends Entity {
     this.set("totalSupply", Value.fromBigInt(value));
   }
 
+  get erc721ContractAddress(): Bytes {
+    let value = this.get("erc721ContractAddress");
+    return value.toBytes();
+  }
+
+  set erc721ContractAddress(value: Bytes) {
+    this.set("erc721ContractAddress", Value.fromBytes(value));
+  }
+
+  get erc721TokenId(): BigInt {
+    let value = this.get("erc721TokenId");
+    return value.toBigInt();
+  }
+
+  set erc721TokenId(value: BigInt) {
+    this.set("erc721TokenId", Value.fromBigInt(value));
+  }
+
+  get tokenURI(): string | null {
+    let value = this.get("tokenURI");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenURI(value: string | null) {
+    if (value === null) {
+      this.unset("tokenURI");
+    } else {
+      this.set("tokenURI", Value.fromString(value as string));
+    }
+  }
+
   get balances(): Array<string> {
     let value = this.get("balances");
     return value.toStringArray();

@@ -1,6 +1,7 @@
-import { BigInt, Bytes } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes, ByteArray } from "@graphprotocol/graph-ts"
 import {
-  TransferSingle
+  TransferSingle,
+  DepositNft
 } from "../generated/Contract/Contract"
 import {
   Account,
@@ -16,8 +17,8 @@ function fetchAccount(address: Bytes): Account {
   let account = Account.load(id)
   if (account == null) {
     account = new Account(id)
+    account.save()
   }
-  account.save()
   return account as Account
 }
 
@@ -28,6 +29,9 @@ function fetchToken(id: BigInt): Token {
     token = new Token(tokenid)
     token.identifier = id
     token.totalSupply = BIGINT_ZERO
+    token.erc721ContractAddress = ByteArray.fromHexString(ADDRESS_ZERO)
+    token.erc721TokenId = BIGINT_ZERO
+    token.save()
   }
   return token as Token
 }
@@ -49,9 +53,7 @@ export function handleTransferSingle(event: TransferSingle): void {
   let to = fetchAccount(event.params.to)
   let token = fetchToken(event.params.id)
 
-  if (from.id == ADDRESS_ZERO) {
-    token.totalSupply = event.params.value
-  } else {
+  if (from.id != ADDRESS_ZERO) {
     let balance = fetchBalance(token, from)
     balance.value = balance.value.minus(event.params.value)
     balance.save()
@@ -62,7 +64,14 @@ export function handleTransferSingle(event: TransferSingle): void {
     balance.value = balance.value.plus(event.params.value)
     balance.save()
   }
+}
 
+export function handleDepositNft(event: DepositNft): void {
+  let token = fetchToken(event.params.erc1155TokenId)
+  token.totalSupply = event.params.totalFractionsAmount
+  token.erc721ContractAddress = event.params.erc721ContractAddress
+  token.erc721TokenId = event.params.erc721TokenId
+  token.tokenURI = event.params.tokenURI
   token.save()
 }
 

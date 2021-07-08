@@ -36,6 +36,40 @@ export class ApprovalForAll__Params {
   }
 }
 
+export class DepositNft extends ethereum.Event {
+  get params(): DepositNft__Params {
+    return new DepositNft__Params(this);
+  }
+}
+
+export class DepositNft__Params {
+  _event: DepositNft;
+
+  constructor(event: DepositNft) {
+    this._event = event;
+  }
+
+  get erc1155TokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get erc721ContractAddress(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get erc721TokenId(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get totalFractionsAmount(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get tokenURI(): string {
+    return this._event.parameters[4].value.toString();
+  }
+}
+
 export class OwnershipTransferred extends ethereum.Event {
   get params(): OwnershipTransferred__Params {
     return new OwnershipTransferred__Params(this);
@@ -181,6 +215,32 @@ export class Unpaused__Params {
 
   get account(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class WithdrawNft extends ethereum.Event {
+  get params(): WithdrawNft__Params {
+    return new WithdrawNft__Params(this);
+  }
+}
+
+export class WithdrawNft__Params {
+  _event: WithdrawNft;
+
+  constructor(event: WithdrawNft) {
+    this._event = event;
+  }
+
+  get erc1155TokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get erc721ContractAddress(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get erc721TokenId(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -458,69 +518,6 @@ export class Contract extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getTokenIdsByShareOwner(shareOwner: Address): Array<BigInt> {
-    let result = super.call(
-      "getTokenIdsByShareOwner",
-      "getTokenIdsByShareOwner(address):(uint256[])",
-      [ethereum.Value.fromAddress(shareOwner)]
-    );
-
-    return result[0].toBigIntArray();
-  }
-
-  try_getTokenIdsByShareOwner(
-    shareOwner: Address
-  ): ethereum.CallResult<Array<BigInt>> {
-    let result = super.tryCall(
-      "getTokenIdsByShareOwner",
-      "getTokenIdsByShareOwner(address):(uint256[])",
-      [ethereum.Value.fromAddress(shareOwner)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigIntArray());
-  }
-
-  getOwnersBYtokenId(tokenId: BigInt): Array<Address> {
-    let result = super.call(
-      "getOwnersBYtokenId",
-      "getOwnersBYtokenId(uint256):(address[])",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-
-    return result[0].toAddressArray();
-  }
-
-  try_getOwnersBYtokenId(tokenId: BigInt): ethereum.CallResult<Array<Address>> {
-    let result = super.tryCall(
-      "getOwnersBYtokenId",
-      "getOwnersBYtokenId(uint256):(address[])",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddressArray());
-  }
-
-  getTokenIds(): Array<BigInt> {
-    let result = super.call("getTokenIds", "getTokenIds():(uint256[])", []);
-
-    return result[0].toBigIntArray();
-  }
-
-  try_getTokenIds(): ethereum.CallResult<Array<BigInt>> {
-    let result = super.tryCall("getTokenIds", "getTokenIds():(uint256[])", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigIntArray());
   }
 }
 

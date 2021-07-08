@@ -7,6 +7,9 @@ type Token @entity {
     id: ID!
     identifier: BigInt!
     totalSupply: BigInt!
+    erc721ContractAddress: Bytes!
+    erc721TokenId: BigInt!
+    tokenURI: String
     balances: [Balance!]! @derivedFrom(field: "token")
 }
 
