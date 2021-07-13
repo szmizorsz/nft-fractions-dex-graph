@@ -1,7 +1,8 @@
 import { BigInt, Bytes, log } from "@graphprotocol/graph-ts"
 import {
   TransferSingle,
-  DepositNft
+  DepositNft,
+  WithdrawNft
 } from "../generated/Contract/Contract"
 import {
   Account,
@@ -28,9 +29,6 @@ function fetchToken(id: BigInt): Token {
   if (token == null) {
     token = new Token(tokenid)
     token.identifier = id
-    //token.totalSupply = BIGINT_ZERO
-    //token.erc721ContractAddress = ByteArray.fromHexString(ADDRESS_ZERO)
-    //token.erc721TokenId = BIGINT_ZERO
     log.info('Token created: {}', [
       tokenid.toString(),
     ])
@@ -81,6 +79,16 @@ export function handleDepositNft(event: DepositNft): void {
   token.erc721ContractAddress = event.params.erc721ContractAddress
   token.erc721TokenId = event.params.erc721TokenId
   token.tokenURI = event.params.tokenURI
+  token.deposited = true
+  token.save()
+}
+
+export function handleWithdrawNft(event: WithdrawNft): void {
+  log.info('WithdrawNFt event handler: {}', [
+    event.params.erc1155TokenId.toString(),
+  ])
+  let token = fetchToken(event.params.erc1155TokenId)
+  token.deposited = false
   token.save()
 }
 

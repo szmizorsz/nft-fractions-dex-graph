@@ -25,4 +25,6 @@ dataSources:
           handler: handleTransferSingle
         - event: DepositNft(uint256,address,uint256,uint256,string)
           handler: handleDepositNft
+        - event: WithdrawNft(uint256,address,uint256)
+          handler: handleWithdrawNft
       file: ./src/mapping.ts

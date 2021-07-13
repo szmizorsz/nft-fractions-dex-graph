@@ -10,6 +10,7 @@ type Token @entity {
     erc721ContractAddress: Bytes
     erc721TokenId: BigInt
     tokenURI: String
+    deposited: Boolean
     balances: [Balance!]! @derivedFrom(field: "token")
 }
 

@@ -159,6 +159,15 @@ export class Token extends Entity {
     }
   }
 
+  get deposited(): boolean {
+    let value = this.get("deposited");
+    return value.toBoolean();
+  }
+
+  set deposited(value: boolean) {
+    this.set("deposited", Value.fromBoolean(value));
+  }
+
   get balances(): Array<string> {
     let value = this.get("balances");
     return value.toStringArray();
