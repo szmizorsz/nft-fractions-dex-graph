@@ -6,7 +6,7 @@ dataSources:
     name: Contract
     network: mumbai
     source:
-      address: "0x0d1EC8B5470AD9c603aeF0c8c809Cf9080Fa1A89"
+      address: "0x63382C82cFb42C306f342Ac1389cF2ece67854F1"
       abi: Contract
       startBlock: 16369941
     mapping:
