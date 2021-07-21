@@ -5,9 +5,20 @@ import {
   WithdrawNft
 } from "../generated/Contract/Contract"
 import {
+  EthBalanceChange,
+  EthReservedBalanceChange,
+  NewTrade,
+  OrderRemoval,
+  OrderUpsert,
+  SharesReservedBalanceChange
+} from "../generated/DexContract/Contract"
+import {
   Account,
   Token,
-  Balance
+  Balance,
+  ShareReservedBalance,
+  Order,
+  Trade
 } from "../generated/schema"
 
 let BIGINT_ZERO = BigInt.fromI32(0)
@@ -47,6 +58,33 @@ function fetchBalance(token: Token, account: Account): Balance {
     balance.value = BIGINT_ZERO
   }
   return balance as Balance
+}
+
+function fetchSharesReservedBalance(token: Token, account: Account): ShareReservedBalance {
+  let balanceid = token.id.concat('-').concat(account.id)
+  let balance = ShareReservedBalance.load(balanceid)
+  if (balance == null) {
+    balance = new ShareReservedBalance(balanceid)
+    balance.token = token.id
+    balance.account = account.id
+    balance.value = BIGINT_ZERO
+  }
+  return balance as ShareReservedBalance
+}
+
+function fetchOrder(id: BigInt): Order {
+  let orderid = id.toHex()
+  let order = Order.load(orderid)
+  if (order == null) {
+    order = new Order(orderid)
+    log.info('Order created: {}', [
+      orderid.toString(),
+    ])
+    order.removed = false
+    order.fullyExecuted = false
+    order.save()
+  }
+  return order as Order
 }
 
 export function handleTransferSingle(event: TransferSingle): void {
@@ -92,3 +130,87 @@ export function handleWithdrawNft(event: WithdrawNft): void {
   token.save()
 }
 
+export function handleOrderUpsert(event: OrderUpsert): void {
+  log.info('OrderUpsert event handler: {}', [
+    event.params.orderId.toString(),
+  ])
+  let order = fetchOrder(event.params.orderId)
+  let token = fetchToken(event.params.tokenId)
+  order.token = token.id
+  let trader = fetchAccount(event.params.trader)
+  order.account = trader.id
+  order.side = event.params.side
+  order.price = event.params.price
+  order.amount = event.params.amount
+  order.filled = event.params.filled
+  order.timestamp = event.params.timestamp
+  if (order.amount == order.filled) {
+    order.fullyExecuted = true
+  }
+  order.save()
+}
+
+export function handleOrderRemoval(event: OrderRemoval): void {
+  log.info('OrderRemoval event handler: {}', [
+    event.params.orderId.toString(),
+  ])
+  let order = fetchOrder(event.params.orderId)
+  order.removed = true
+  order.save()
+}
+
+export function handleNewTrade(event: NewTrade): void {
+  log.info('NewTrade event handler: {}', [
+    event.params.tradeId.toString(),
+  ])
+
+  let tradeId = event.params.tradeId.toHex()
+  let trade = new Trade(tradeId)
+
+  let order = fetchOrder(event.params.orderId)
+  trade.order = order.id
+
+  let token = fetchToken(event.params.tokenId)
+  trade.token = token.id
+
+  let trader1 = fetchAccount(event.params.trader1)
+  trade.trader1 = trader1.id
+
+  let trader2 = fetchAccount(event.params.trader2)
+  trade.trader2 = trader2.id
+
+  trade.price = event.params.price
+  trade.amount = event.params.amount
+  trade.date = event.params.date
+
+  trade.save()
+}
+
+export function handleEthBalanceChange(event: EthBalanceChange): void {
+  log.info('EthBalanceChange event handler for account: {}', [
+    event.params.account.toString(),
+  ])
+  let account = fetchAccount(event.params.account)
+  account.ethBalance = event.params.balance
+  account.save()
+}
+
+export function handleEthReservedBalanceChange(event: EthReservedBalanceChange): void {
+  log.info('EthReservedBalanceChange event handler for account: {}', [
+    event.params.account.toString(),
+  ])
+  let account = fetchAccount(event.params.account)
+  account.ethReservedBalance = event.params.balance
+  account.save()
+}
+
+export function handleSharesReservedBalanceChange(event: SharesReservedBalanceChange): void {
+  log.info('SharesReservedBalanceChange event handler for account: {}', [
+    event.params.account.toString(),
+  ])
+  let token = fetchToken(event.params.tokenId)
+  let account = fetchAccount(event.params.account)
+  let balance = fetchSharesReservedBalance(token, account)
+  balance.value = event.params.sharesReservedBalance
+  balance.save()
+}

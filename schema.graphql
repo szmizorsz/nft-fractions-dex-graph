@@ -1,6 +1,9 @@
 type Account @entity {
     id: ID! # address
     balances: [Balance!]! @derivedFrom(field: "account")
+    ethBalance: BigInt
+    ethReservedBalance: BigInt
+    shareReservedBalances: [ShareReservedBalance!]! @derivedFrom(field: "account")
 }
 
 type Token @entity {
@@ -12,6 +15,8 @@ type Token @entity {
     tokenURI: String
     deposited: Boolean
     balances: [Balance!]! @derivedFrom(field: "token")
+    orders: [Order!] @derivedFrom(field: "token")
+    trades: [Trade!] @derivedFrom(field: "token")
 }
 
 type Balance @entity {
@@ -19,4 +24,40 @@ type Balance @entity {
     token: Token!
     account: Account!
     value: BigInt!
+}
+
+type ShareReservedBalance @entity {
+    id: ID!
+    token: Token!
+    account: Account!
+    value: BigInt!
+}
+
+enum OrderSide {
+  Buy
+  Sell
+}
+
+type Order @entity {
+    id: ID!
+    token: Token!
+    account: Account!
+    side: OrderSide
+    price: BigInt!
+    amount: BigInt!
+    filled: BigInt
+    timestamp: BigInt
+    removed: Boolean
+    fullyExecuted: Boolean
+}
+
+type Trade @entity {
+    id: ID!
+    order: Order!
+    token: Token!
+    trader1: Account!
+    trader2: Account!
+    price: BigInt!
+    amount: BigInt!
+    date: BigInt
 }
