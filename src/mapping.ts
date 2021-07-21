@@ -139,12 +139,16 @@ export function handleOrderUpsert(event: OrderUpsert): void {
   order.token = token.id
   let trader = fetchAccount(event.params.trader)
   order.account = trader.id
-  order.side = event.params.side
+  if (event.params.side === 0) {
+    order.side = 'Buy'
+  } else if (event.params.side === 1) {
+    order.side = 'Sell'
+  }
   order.price = event.params.price
   order.amount = event.params.amount
   order.filled = event.params.filled
   order.timestamp = event.params.timestamp
-  if (order.amount == order.filled) {
+  if (order.amount === order.filled) {
     order.fullyExecuted = true
   }
   order.save()

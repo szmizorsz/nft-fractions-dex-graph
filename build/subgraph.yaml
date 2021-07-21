@@ -6,9 +6,9 @@ dataSources:
     name: Contract
     network: mumbai
     source:
-      address: "0x1B7B30BEf45f345e5D4F16bA65C674C2095f3F96"
+      address: "0xa6902CED6bb37aa124e8BbC5FBf02185d9fb22B7"
       abi: Contract
-      startBlock: 16369941
+      startBlock: 16626151
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -27,4 +27,38 @@ dataSources:
           handler: handleDepositNft
         - event: WithdrawNft(uint256,address,uint256)
           handler: handleWithdrawNft
+      file: Contract/Contract.wasm
+  - kind: ethereum/contract
+    name: DexContract
+    network: mumbai
+    source:
+      address: "0x0CB8A2A1bE93437629f71c49b645d29EF36A51D4"
+      abi: Contract
+      startBlock: 16626291
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Account
+        - Token
+        - ShareReservedBalance
+        - Order
+        - Trade
+      abis:
+        - name: Contract
+          file: DexContract/abis/MaticDex.json
+      eventHandlers:
+        - event: OrderUpsert(uint256,address,uint8,uint256,uint256,uint256,uint256,uint256)
+          handler: handleOrderUpster
+        - event: OrderRemoval(uint256)
+          handler: handleOrderRemoval
+        - event: NewTrade(uint256,uint256,uint256,address,address,uint256,uint256,uint256)
+          handler: handleNewTrade
+        - event: EthBalanceChange(address,uint256)
+          handler: handleEthBalanceChange
+        - event: EthReservedBalanceChange(address,uint256)
+          handler: handleEthReservedBalanceChange
+        - event: SharesReservedBalanceChange(address,uint256,uint256)
+          handler: handleSharesReservedBalanceChange
       file: Contract/Contract.wasm
