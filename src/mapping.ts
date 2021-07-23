@@ -162,7 +162,7 @@ export function handleOrderRemoval(event: OrderRemoval): void {
   order.removed = true
   order.save()
 }
-/* 
+
 export function handleNewTrade(event: NewTrade): void {
   log.info('NewTrade event handler: {}', [
     event.params.tradeId.toString(),
@@ -188,7 +188,7 @@ export function handleNewTrade(event: NewTrade): void {
   trade.date = event.params.date
 
   trade.save()
-} */
+}
 
 export function handleEthBalanceChange(event: EthBalanceChange): void {
   log.info('EthBalanceChange event handler for account: {}', [

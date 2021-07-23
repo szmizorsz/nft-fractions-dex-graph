@@ -59,4 +59,6 @@ dataSources:
           handler: handleSharesReservedBalanceChange
         - event: OrderRemoval(uint256)
           handler: handleOrderRemoval
+        - event: NewTrade(uint256,uint256,uint256,address,address,uint256,uint256,uint256)
+          handler: handleNewTrade
       file: ./src/mapping.ts
