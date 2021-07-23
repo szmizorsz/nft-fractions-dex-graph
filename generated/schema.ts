@@ -220,6 +220,15 @@ export class Token extends Entity {
     this.set("balances", Value.fromStringArray(value));
   }
 
+  get shareReservedBalances(): Array<string> {
+    let value = this.get("shareReservedBalances");
+    return value.toStringArray();
+  }
+
+  set shareReservedBalances(value: Array<string>) {
+    this.set("shareReservedBalances", Value.fromStringArray(value));
+  }
+
   get orders(): Array<string> | null {
     let value = this.get("orders");
     if (value === null || value.kind == ValueKind.NULL) {
@@ -404,22 +413,38 @@ export class Order extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get token(): string {
+  get token(): string | null {
     let value = this.get("token");
-    return value.toString();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set token(value: string) {
-    this.set("token", Value.fromString(value));
+  set token(value: string | null) {
+    if (value === null) {
+      this.unset("token");
+    } else {
+      this.set("token", Value.fromString(value as string));
+    }
   }
 
-  get account(): string {
+  get account(): string | null {
     let value = this.get("account");
-    return value.toString();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set account(value: string) {
-    this.set("account", Value.fromString(value));
+  set account(value: string | null) {
+    if (value === null) {
+      this.unset("account");
+    } else {
+      this.set("account", Value.fromString(value as string));
+    }
   }
 
   get side(): string | null {
@@ -439,22 +464,38 @@ export class Order extends Entity {
     }
   }
 
-  get price(): BigInt {
+  get price(): BigInt | null {
     let value = this.get("price");
-    return value.toBigInt();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set price(value: BigInt) {
-    this.set("price", Value.fromBigInt(value));
+  set price(value: BigInt | null) {
+    if (value === null) {
+      this.unset("price");
+    } else {
+      this.set("price", Value.fromBigInt(value as BigInt));
+    }
   }
 
-  get amount(): BigInt {
+  get amount(): BigInt | null {
     let value = this.get("amount");
-    return value.toBigInt();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set amount(value: BigInt) {
-    this.set("amount", Value.fromBigInt(value));
+  set amount(value: BigInt | null) {
+    if (value === null) {
+      this.unset("amount");
+    } else {
+      this.set("amount", Value.fromBigInt(value as BigInt));
+    }
   }
 
   get filled(): BigInt | null {

@@ -131,7 +131,7 @@ export function handleWithdrawNft(event: WithdrawNft): void {
 }
 
 export function handleOrderUpsert(event: OrderUpsert): void {
-  log.info('OrderUpsert event handler: {}', [
+  log.info('OrderUpsert event handler : {}', [
     event.params.orderId.toString(),
   ])
   let order = fetchOrder(event.params.orderId)
@@ -162,7 +162,7 @@ export function handleOrderRemoval(event: OrderRemoval): void {
   order.removed = true
   order.save()
 }
-
+/* 
 export function handleNewTrade(event: NewTrade): void {
   log.info('NewTrade event handler: {}', [
     event.params.tradeId.toString(),
@@ -188,11 +188,11 @@ export function handleNewTrade(event: NewTrade): void {
   trade.date = event.params.date
 
   trade.save()
-}
+} */
 
 export function handleEthBalanceChange(event: EthBalanceChange): void {
   log.info('EthBalanceChange event handler for account: {}', [
-    event.params.account.toString(),
+    event.params.account.toHexString(),
   ])
   let account = fetchAccount(event.params.account)
   account.ethBalance = event.params.balance
@@ -201,7 +201,7 @@ export function handleEthBalanceChange(event: EthBalanceChange): void {
 
 export function handleEthReservedBalanceChange(event: EthReservedBalanceChange): void {
   log.info('EthReservedBalanceChange event handler for account: {}', [
-    event.params.account.toString(),
+    event.params.account.toHexString(),
   ])
   let account = fetchAccount(event.params.account)
   account.ethReservedBalance = event.params.balance
@@ -210,7 +210,7 @@ export function handleEthReservedBalanceChange(event: EthReservedBalanceChange):
 
 export function handleSharesReservedBalanceChange(event: SharesReservedBalanceChange): void {
   log.info('SharesReservedBalanceChange event handler for account: {}', [
-    event.params.account.toString(),
+    event.params.account.toHexString(),
   ])
   let token = fetchToken(event.params.tokenId)
   let account = fetchAccount(event.params.account)

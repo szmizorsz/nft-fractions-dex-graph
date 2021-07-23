@@ -49,16 +49,14 @@ dataSources:
         - name: Contract
           file: ./abis/MaticDex.json
       eventHandlers:
-        - event: OrderUpsert(uint256,address,uint8,uint256,uint256,uint256,uint256,uint256)
-          handler: handleOrderUpster
-        - event: OrderRemoval(uint256)
-          handler: handleOrderRemoval
-        - event: NewTrade(uint256,uint256,uint256,address,address,uint256,uint256,uint256)
-          handler: handleNewTrade
         - event: EthBalanceChange(address,uint256)
-          handler: handleEthBalanceChange
+          handler: handleEthBalanceChange     
         - event: EthReservedBalanceChange(address,uint256)
-          handler: handleEthReservedBalanceChange
+          handler: handleEthReservedBalanceChange  
+        - event: OrderUpsert(uint256,address,uint8,uint256,uint256,uint256,uint256,uint256)
+          handler: handleOrderUpsert  
         - event: SharesReservedBalanceChange(address,uint256,uint256)
           handler: handleSharesReservedBalanceChange
+        - event: OrderRemoval(uint256)
+          handler: handleOrderRemoval
       file: ./src/mapping.ts

@@ -15,6 +15,7 @@ type Token @entity {
     tokenURI: String
     deposited: Boolean
     balances: [Balance!]! @derivedFrom(field: "token")
+    shareReservedBalances: [ShareReservedBalance!]! @derivedFrom(field: "token")
     orders: [Order!] @derivedFrom(field: "token")
     trades: [Trade!] @derivedFrom(field: "token")
 }
@@ -40,11 +41,11 @@ enum OrderSide {
 
 type Order @entity {
     id: ID!
-    token: Token!
-    account: Account!
+    token: Token
+    account: Account
     side: OrderSide
-    price: BigInt!
-    amount: BigInt!
+    price: BigInt
+    amount: BigInt
     filled: BigInt
     timestamp: BigInt
     removed: Boolean
