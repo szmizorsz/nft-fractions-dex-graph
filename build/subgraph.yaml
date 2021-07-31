@@ -6,9 +6,9 @@ dataSources:
     name: Contract
     network: mumbai
     source:
-      address: "0xa6902CED6bb37aa124e8BbC5FBf02185d9fb22B7"
+      address: "0xF450549A29591303ddD5da65A41073dA75Ef15E0"
       abi: Contract
-      startBlock: 16626151
+      startBlock: 16953348
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -32,9 +32,9 @@ dataSources:
     name: DexContract
     network: mumbai
     source:
-      address: "0x0CB8A2A1bE93437629f71c49b645d29EF36A51D4"
+      address: "0x4c0D50024510cD952A8B99526942DCB8F0460F21"
       abi: Contract
-      startBlock: 16626291
+      startBlock: 16953348
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

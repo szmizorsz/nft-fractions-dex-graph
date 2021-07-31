@@ -164,7 +164,7 @@ export function handleOrderRemoval(event: OrderRemoval): void {
 }
 
 export function handleNewTrade(event: NewTrade): void {
-  log.info('NewTrade event handler: {}', [
+  log.info('Trade event handler: {}', [
     event.params.tradeId.toString(),
   ])
 
