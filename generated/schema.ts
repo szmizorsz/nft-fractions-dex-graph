@@ -540,15 +540,6 @@ export class Order extends Entity {
   set removed(value: boolean) {
     this.set("removed", Value.fromBoolean(value));
   }
-
-  get fullyExecuted(): boolean {
-    let value = this.get("fullyExecuted");
-    return value.toBoolean();
-  }
-
-  set fullyExecuted(value: boolean) {
-    this.set("fullyExecuted", Value.fromBoolean(value));
-  }
 }
 
 export class Trade extends Entity {

@@ -81,7 +81,6 @@ function fetchOrder(id: BigInt): Order {
       orderid.toString(),
     ])
     order.removed = false
-    order.fullyExecuted = false
     order.save()
   }
   return order as Order
@@ -148,9 +147,6 @@ export function handleOrderUpsert(event: OrderUpsert): void {
   order.amount = event.params.amount
   order.filled = event.params.filled
   order.timestamp = event.params.timestamp
-  if (order.amount === order.filled) {
-    order.fullyExecuted = true
-  }
   order.save()
 }
 

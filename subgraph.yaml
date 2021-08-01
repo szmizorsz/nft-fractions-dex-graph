@@ -6,9 +6,9 @@ dataSources:
     name: Contract
     network: mumbai
     source:
-      address: "0xF450549A29591303ddD5da65A41073dA75Ef15E0"
+      address: "0xb39f15dFd26a523060aA37280b5F3E60057d24D8"
       abi: Contract
-      startBlock: 16953348
+      startBlock: 17097707
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -19,7 +19,7 @@ dataSources:
         - Balance
       abis:
         - name: Contract
-          file: ./abis/Contract.json
+          file: ./abis/MaticNftFractionsRepository.json
       eventHandlers:
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingle
@@ -32,9 +32,9 @@ dataSources:
     name: DexContract
     network: mumbai
     source:
-      address: "0x4c0D50024510cD952A8B99526942DCB8F0460F21"
+      address: "0x45656E087F5540bcB6B2cD6Fd7627FDEBA757Cf0"
       abi: Contract
-      startBlock: 16953348
+      startBlock: 17097772
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
